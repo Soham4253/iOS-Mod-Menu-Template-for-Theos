@@ -4,6 +4,27 @@
   INSIDE THE FUNCTION BELOW YOU'LL HAVE TO ADD YOUR SWITCHES!
 ***********************************************************/
 void setup() {
+  // Disable Enemy (Return False)
+  [switches addOffsetSwitch:NSSENCRYPT("Disable Enemy")
+    description:NSSENCRYPT("Stops enemy logic")
+    offsets: {
+      ENCRYPTOFFSET("0x313D2C4")
+    }
+    bytes: {
+      ENCRYPTHEX("0x000080D2C0035FD6")
+    }
+  ];
+
+  // Long Range Hits (Return True)
+  [switches addOffsetSwitch:NSSENCRYPT("Long Range Hits")
+    description:NSSENCRYPT("Hit enemies from anywhere")
+    offsets: {
+      ENCRYPTOFFSET("0x310509C")
+    }
+    bytes: {
+      ENCRYPTHEX("0x200080D2C0035FD6")
+    }
+  ];
 
   //patching offsets directly, without switch
   patchOffset(ENCRYPTOFFSET("0x1002DB3C8"), ENCRYPTHEX("0xC0035FD6"));
@@ -139,4 +160,5 @@ static void didFinishLaunching(CFNotificationCenterRef center, void *observer, C
 
 %ctor {
   CFNotificationCenterAddObserver(CFNotificationCenterGetLocalCenter(), NULL, &didFinishLaunching, (CFStringRef)UIApplicationDidFinishLaunchingNotification, NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+
 }
