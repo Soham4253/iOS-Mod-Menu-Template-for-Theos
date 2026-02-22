@@ -1,0 +1,39 @@
+name: Compile Mod Menu
+
+on:
+  workflow_dispatch: 
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Theos
+        uses: Randomblock1/theos-action@v1
+        
+      - name: Build the Menu
+        run: |
+          # 1. Open the raw template folder
+          cd template
+          
+          # 2. Rename the broken plist file
+          mv "@@PROJECTNAME@@.plist" MyMenu.plist || true
+          
+          # 3. Swap the template placeholders with your menu details
+          sed -i '' 's/@@PROJECTNAME@@/MyMenu/g' Makefile control
+          sed -i '' 's/@@PACKAGENAME@@/com.soham.mymenu/g' control
+          sed -i '' 's/@@USER@@/Soham/g' control Tweak.xm Menu.mm
+          sed -i '' 's/@@APPNAME@@/Game/g' Menu.mm
+          
+          # 4. Compile your cheat!
+          make package FINALPACKAGE=1
+        
+      - name: Upload Compiled Menu
+        uses: actions/upload-artifact@v4
+        with:
+          name: Compiled-Mod-Menu
+          path: template/packages/*.deb
