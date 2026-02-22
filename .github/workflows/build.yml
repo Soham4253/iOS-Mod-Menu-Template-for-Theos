@@ -17,6 +17,12 @@ jobs:
         
       - name: Build the Menu
         run: |
+          # 0. Trick the compiler! Give the newest SDK the 11.2 fake name tag.
+          cd $THEOS/sdks
+          LATEST_SDK=$(ls | grep iPhoneOS | head -n 1)
+          ln -s $LATEST_SDK iPhoneOS11.2.sdk
+          cd ${{ github.workspace }}
+          
           # 1. Open the raw template folder
           cd template
           
@@ -37,3 +43,4 @@ jobs:
         with:
           name: Compiled-Mod-Menu
           path: template/packages/*.deb
+          
